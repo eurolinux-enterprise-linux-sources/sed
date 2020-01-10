@@ -1,0 +1,30 @@
+From 5d7d2b1cc26101ff5c7f549f47b1b948dcafc20c Mon Sep 17 00:00:00 2001
+From: Paolo Bonzini <bonzini@gnu.org>
+Date: Mon, 7 Dec 2009 14:40:18 +0100
+Subject: [PATCH] fix debian bug 559539
+
+2009-12-07  Clint Adams  <schizo@debian.org>  (tiny change)
+
+	* sed/execute.c (open_next_file): If is_selinux_enabled returns -1,
+	treat it as "disabled".
+---
+ ChangeLog     |    5 +++++
+ sed/execute.c |    2 +-
+ 2 files changed, 6 insertions(+), 1 deletions(-)
+
+diff --git a/sed/execute.c b/sed/execute.c
+index 28e520d..c432fbe 100644
+--- a/sed/execute.c
++++ b/sed/execute.c
+@@ -745,7 +745,7 @@ open_next_file(name, input)
+         panic(_("couldn't edit %s: not a regular file"), input->in_file_name);
+ 
+ #ifndef BOOTSTRAP
+-      if (is_selinux_enabled ())
++      if (is_selinux_enabled () > 0)
+ 	{
+           security_context_t con;
+ 	  if (getfilecon (input->in_file_name, &con) != -1)
+-- 
+1.7.5.4
+

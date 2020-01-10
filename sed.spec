@@ -6,13 +6,16 @@
 Summary: A GNU stream text editor
 Name: sed
 Version: 4.2.1
-Release: 5%{?dist}
+Release: 7%{?dist}
 License: GPLv2+
 Group: Applications/Text
 URL: http://sed.sourceforge.net/
 Source0: ftp://ftp.gnu.org/pub/gnu/sed/sed-%{version}.tar.bz2
 Source1: http://sed.sourceforge.net/sedfaq.txt
 Patch0: sed-4.2.1-copy.diff
+Patch1: sed-4.2.1-selinux-enabled-error.patch
+#improve man/usage documentation of the -i/--in-place option(#679921)
+Patch2: sed-4.2.1-inplace-symlinks-doc.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: glibc-devel, libselinux-devel
 Requires(post): /sbin/install-info
@@ -28,6 +31,8 @@ specified in a script file or from the command line.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
+%patch2 -p1
 
 %build
 %configure --without-included-regex
@@ -68,6 +73,14 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man*/*
 
 %changelog
+* Thu Jul 28 2011 Ondrej Vasik <ovasik@redhat.com> - 4.2.1-7
+- improve man/usage documentation of the -i/--in-place option
+  in the case of symlinks/hardlinks(#679921)
+
+* Tue Jul 12 2011 Vojtech Vitek (V-Teq) <vvitek@redhat.com> - 4.2.1-6
+- Fix wrong condition on is_selinux_enabled error
+  Resolves: #721349
+
 * Mon Feb 22 2010 Jiri Moskovcak <jmoskovc@redhat.com> 4.2.1-5
 - added back -c/--copy
 - resolves: #566457
