@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 %ifos linux
 %define _bindir /bin
 %endif
@@ -6,16 +5,16 @@
 Summary: A GNU stream text editor
 Name: sed
 Version: 4.2.1
-Release: 7%{?dist}
+Release: 10%{?dist}
 License: GPLv2+
 Group: Applications/Text
 URL: http://sed.sourceforge.net/
 Source0: ftp://ftp.gnu.org/pub/gnu/sed/sed-%{version}.tar.bz2
 Source1: http://sed.sourceforge.net/sedfaq.txt
-Patch0: sed-4.2.1-copy.diff
+Patch0: sed-4.2.1-copy-option.patch
 Patch1: sed-4.2.1-selinux-enabled-error.patch
-#improve man/usage documentation of the -i/--in-place option(#679921)
-Patch2: sed-4.2.1-inplace-symlinks-doc.patch
+Patch2: sed-4.2.1-testsuite-utf8-locales.patch
+Patch3: sed-4.2.1-file-resource-leak.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: glibc-devel, libselinux-devel
 Requires(post): /sbin/install-info
@@ -30,9 +29,10 @@ specified in a script file or from the command line.
 
 %prep
 %setup -q
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
+%patch0 -p1 -b .copy-option
+%patch1 -p1 -b .selinux-enabled-error
+%patch2 -p1 -b .testsuite-utf8-locales
+%patch3 -p1 -b .file-resource-leak
 
 %build
 %configure --without-included-regex
@@ -73,6 +73,17 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man*/*
 
 %changelog
+* Wed May 02 2012 Vojtech Vitek (V-Teq) <vvitek@redhat.com> - 4.2.1-10
+- Fix minor FILE resource leaks found by CoverityScan (#812316)
+
+* Tue Mar 06 2012 Vojtech Vitek (V-Teq) <vvitek@redhat.com> - 4.2.1-9
+- Fix testsuite LANG/LC_ALL utf8 locales (#724962)
+
+* Tue Mar 06 2012 Vojtech Vitek (V-Teq) <vvitek@redhat.com> - 4.2.1-8
+- fix `--copy' option behaviour to unlink sedXXX temp files,
+  clean-up the copy-option patch and merge it with the
+  `-i/--in-place' docs/manpage patch (#709956)
+
 * Thu Jul 28 2011 Ondrej Vasik <ovasik@redhat.com> - 4.2.1-7
 - improve man/usage documentation of the -i/--in-place option
   in the case of symlinks/hardlinks(#679921)

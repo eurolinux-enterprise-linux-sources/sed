@@ -1,0 +1,51 @@
+From 98d51a32dc25a90ce37c5933f4f4180bdd30df76 Mon Sep 17 00:00:00 2001
+From: "Vojtech Vitek (V-Teq)" <vvitek@redhat.com>
+Date: Tue, 6 Mar 2012 14:56:00 +0100
+Subject: [PATCH] Fix LANG/LC_ALL utf8 tests
+
+Based on http://lists.gnu.org/archive/html/bug-gnu-utils/2009-10/msg00018.html
+---
+ testsuite/Makefile.tests |   12 ++++++------
+ 1 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/testsuite/Makefile.tests b/testsuite/Makefile.tests
+index 1f04290..c0910dc 100644
+--- a/testsuite/Makefile.tests
++++ b/testsuite/Makefile.tests
+@@ -34,16 +34,16 @@ y-bracket y-newline insert brackets::
+ 	@$(RM) $@.out 
+ 
+ badenc::
+-	LANG=ru_RU.UTF-8 $(TIME) $(SED) -nf $(srcdir)/$@.sed \
++	LC_ALL=ru_RU.UTF-8 $(TIME) $(SED) -nf $(srcdir)/$@.sed \
+ 		< $(srcdir)/$@.inp | $(TR) -d \\r > $@.out 
+ 	$(CMP) $(srcdir)/$@.good $@.out 
+-	LANG=it_IT.UTF-8 $(TIME) $(SED) -nf $(srcdir)/$@.sed \
++	LC_ALL=it_IT.UTF-8 $(TIME) $(SED) -nf $(srcdir)/$@.sed \
+ 		< $(srcdir)/$@.inp | $(TR) -d \\r > $@.out 
+ 	$(CMP) $(srcdir)/$@.good $@.out 
+-	LANG=en_US.UTF-8 $(TIME) $(SED) -nf $(srcdir)/$@.sed \
++	LC_ALL=en_US.UTF-8 $(TIME) $(SED) -nf $(srcdir)/$@.sed \
+ 		< $(srcdir)/$@.inp | $(TR) -d \\r > $@.out 
+ 	$(CMP) $(srcdir)/$@.good $@.out 
+-	LANG=en_GB.UTF-8 $(TIME) $(SED) -nf $(srcdir)/$@.sed \
++	LC_ALL=en_GB.UTF-8 $(TIME) $(SED) -nf $(srcdir)/$@.sed \
+ 		< $(srcdir)/$@.inp | $(TR) -d \\r > $@.out 
+ 	$(CMP) $(srcdir)/$@.good $@.out 
+ 	@$(RM) $@.out 
+@@ -51,10 +51,10 @@ badenc::
+ # Try with ru_RU.UTF-8.  If it is presumably not installed, see if the current
+ # locale is UTF-8 and run it in the current locale.
+ utf8-1 utf8-2 utf8-3 utf8-4::
+-	echo "LANG=ru_RU.UTF-8" \
++	echo "LC_ALL=ru_RU.UTF-8" \
+ 	  "$(TIME) $(SED) -f $(srcdir)/$@.sed" \
+ 	  "< $(srcdir)/$@.inp | $(TR) -d \\r > $@.out"; \
+-	LANG=ru_RU.UTF-8 \
++	LC_ALL=ru_RU.UTF-8 \
+ 	  $(TIME) $(SED) -f $(srcdir)/$@.sed \
+ 		< $(srcdir)/$@.inp | $(TR) -d \\r > $@.out; \
+ 	$(CMP) $(srcdir)/$@.good $@.out && exit 0; \
+-- 
+1.7.6.5
+
