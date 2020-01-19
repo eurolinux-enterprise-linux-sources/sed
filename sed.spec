@@ -6,13 +6,13 @@
 Summary: A GNU stream text editor
 Name: sed
 Version: 4.2.2
-Release: 2%{?dist}
+Release: 5%{?dist}
 License: GPLv3+
 Group: Applications/Text
 URL: http://sed.sourceforge.net/
 Source0: ftp://ftp.gnu.org/pub/gnu/sed/sed-%{version}.tar.bz2
 Source1: http://sed.sourceforge.net/sedfaq.txt
-Patch0: sed-4.2.2-copy.patch
+Patch0: sed-4.2.2-binary_copy_args.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: glibc-devel, libselinux-devel
 Requires(post): /sbin/install-info
@@ -71,6 +71,16 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man*/*
 
 %changelog
+* Mon Feb 10 2014 Jan Pacner <jpacner@redhat.com> - 4.2.2-5
+- Related: #948598 (Man page scan results for sed; introduce -c argument, add
+  help for -b --binary arguments, cleanup arguments & help)
+
+* Fri Jan 24 2014 Daniel Mach <dmach@redhat.com> - 4.2.2-4
+- Mass rebuild 2014-01-24
+
+* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 4.2.2-3
+- Mass rebuild 2013-12-27
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.2.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
@@ -152,7 +162,7 @@ rm -rf ${RPM_BUILD_ROOT}
 * Mon Sep  4 2006 Petr Machata <pmachata@redhat.com> - 4.1.5-5
 - Fix handling of relative symlinks (#205122)
 
-* Wed Aug  3 2006 Petr Machata <pmachata@redhat.com> - 4.1.5-4
+* Thu Aug  3 2006 Petr Machata <pmachata@redhat.com> - 4.1.5-4
 - remove superfluous multibyte processing in str_append for UTF-8
   encoding (thanks Paolo Bonzini, #177246)
 
